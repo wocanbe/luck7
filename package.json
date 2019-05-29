@@ -1,0 +1,27 @@
+{
+  "name": "luck7",
+  "version": "0.1.0",
+  "author": "584069777@qq.com",
+  "description": "vue",
+  "main": "index.js",
+  "dependencies": {
+    "babel-plugin-syntax-dynamic-import": "^6.26.0",
+    "chalk": "^2.4.2",
+    "hash-sum": "^1.0.2",
+    "luck7-ui": "^0.1.0"
+  },
+  "peerDependencies": {
+    "async-validator": "^1.8.1",
+    "axios": "^0.16.2",
+    "lodash": "^4.17.4",
+    "vue": "^2.4.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wocanbe/luck7.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wocanbe/luck7.git/issues"
+  },
+  "homepage": "https://github.com/wocanbe/luck7.git#readme"
+}
