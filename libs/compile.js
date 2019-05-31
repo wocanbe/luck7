@@ -3,6 +3,12 @@ const hash = require('hash-sum')
 
 let dependents = []
 
+function addLink (path) {
+  const hashName = '_' + hash(path)
+  const depCode = `const ${hashName} = require('${path}')`
+  if (!dependents.includes(depCode)) dependents.unshift(depCode)
+  return hashName
+}
 function addDependent (path) {
   const hashName = '_' + hash(path)
   const depCode = `import ${hashName} from '${path}'`
@@ -39,6 +45,9 @@ function compileObj (obj) {
     if (k.substr(-4) === '|var') {
       key = k.substr(0, k.length - 4)
       importType = 'v'
+    } else if (k.substr(-5) === '|link') {
+      key = k.substr(0, k.length - 5)
+      importType = 'l'
     } else if (k.substr(-8) === '|require') {
       key = k.substr(0, k.length - 8)
       importType = 'r'
@@ -54,6 +63,8 @@ function compileObj (obj) {
     if (_.isString(lConfig)) {
       if (importType === 'v') {
         value = lConfig
+      } else if (importType === 'l') {
+        value = addLink(lConfig)
       } else if (importType === 'r') {
         value = `require('${lConfig}')`
       } else if (importType === 'f') {
@@ -100,12 +111,14 @@ function compileArr (arrs, arrFun) {
       }
       if (arrItem.substr(-4) === '|var') {
         arrVal += arrItem.substr(0, arrItem.length - 4)
+      } else if (arrItem.substr(-5) === '|link') {
+        arrVal += addLink(arrItem.substr(0, arrItem.length - 5))
       } else if (arrItem.substr(-8) === '|require') {
         arrVal += `require('${arrItem.substr(0, arrItem.length - 8)}')`
       } else if (arrItem.substr(-9) === '|filelink') {
-        arrVal += `${addDependent(arrItem.substr(0, arrItem.length - 9))}`
+        arrVal += addDependent(arrItem.substr(0, arrItem.length - 9))
       } else if (arrItem.substr(-10) === '|asynclink') {
-        arrVal += `${addAsyncDep(arrItem.substr(0, arrItem.length - 10))}`
+        arrVal += addAsyncDep(arrItem.substr(0, arrItem.length - 10))
       } else {
         arrVal += `'${arrItem}'`
       }
@@ -145,6 +158,19 @@ function compile(options) {
     // eslint-disable-next-line
     installStr += install.replace('${config}', compileConfig(config)) + '\n'
   }
+  const dpts1 = []
+  const dpts2 = []
+  const dpts3 = []
+  for (const dpt of dependents) {
+    if (dpt.indexOf('require(') > 0) {
+      dpts1.push(dpt)
+    } else if (dpt.indexOf('from') > 0) {
+      dpts2.push(dpt)
+    } else if (dpt.indexOf('import(') > 0) {
+      dpts3.push(dpt)
+    }
+  }
+  dependents = dpts1.concat(dpts2, dpts3)
 
   let backStr = '// libs\n'
   backStr += options.libs.join('\n')

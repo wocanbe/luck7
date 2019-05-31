@@ -22,7 +22,7 @@ function loadCmpts (cmps, cmpts, ocmpts) {
   for (const cmp of cmps) {
     if (components.includes(cmp)) {
       const cmpDir = camel2hyphen(cmp)
-      cmpts.push(`element-ui/packages/${cmpDir}/index.js|filelink`)
+      cmpts.push(`element-ui/lib/${cmpDir}.js|filelink`)
     } else if (globalComponents.includes(cmp)) { // element的全局组件不在ui组件列表中，不需要注册为vue组件，所以要分开处理
       const cmpDir = camel2hyphen(cmp)
       const dictInfo = directive[cmp]
@@ -40,7 +40,7 @@ function loadCmpts (cmps, cmpts, ocmpts) {
           }
         }
       }
-      ocmpts.push(`element-ui/packages/${cmpDir}/index.js|filelink`)
+      ocmpts.push(`element-ui/lib/${cmpDir}.js|filelink`)
     }
   }
   return install
