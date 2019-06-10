@@ -74,6 +74,7 @@ module.exports = function (loader, options) {
     // eslint-disable-next-line
     install: install
   }
+  const targetFile = options.target
   if (targetFile) result['export'] = targetFile
 
   return result
