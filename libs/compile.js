@@ -97,7 +97,7 @@ function compileObj (obj) {
 function compileArr (arrs, arrFun) {
   let backStr = '['
   let arrOrder = 0
-  for (const arrItem of arrs) {
+  for (let arrItem of arrs) {
     if (arrOrder > 0) backStr += ', '
     arrOrder++
     let arrVal = ''
@@ -107,7 +107,7 @@ function compileArr (arrs, arrFun) {
         const startFun = arrItem.lastIndexOf('!')
         funName = arrItem.slice(startFun + 1, -4)
         arrItem = arrItem.substr(0, startFun)
-        arrVal = `${funName}(` 
+        arrVal = `${funName}(`
       }
       if (arrItem.substr(-4) === '|var') {
         arrVal += arrItem.substr(0, arrItem.length - 4)
@@ -149,7 +149,7 @@ function compileConfig (config) {
   }
 }
 
-function compile(options) {
+function compile (options) {
   dependents = []
   let installStr = ''
   for (let i = 0; i < options.installs.length; i++) {
@@ -158,19 +158,6 @@ function compile(options) {
     // eslint-disable-next-line
     installStr += install.replace('${config}', compileConfig(config)) + '\n'
   }
-  const dpts1 = []
-  const dpts2 = []
-  const dpts3 = []
-  for (const dpt of dependents) {
-    if (dpt.indexOf('require(') > 0) {
-      dpts1.push(dpt)
-    } else if (dpt.indexOf('from') > 0) {
-      dpts2.push(dpt)
-    } else if (dpt.indexOf('import(') > 0) {
-      dpts3.push(dpt)
-    }
-  }
-  dependents = dpts1.concat(dpts2, dpts3)
 
   let backStr = '// libs\n'
   backStr += options.libs.join('\n')

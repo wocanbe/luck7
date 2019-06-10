@@ -67,10 +67,14 @@ module.exports = function (loader, options) {
   install += '  l7UiCmps.map(item => Vue.use(item.component, item.config))\n'
   install += '}\n'
   install += 'const l7Ui = {install: l7UiInstall}'
-  return {
+
+  const result = {
     libs: libs,
     config: componentsConfig,
     // eslint-disable-next-line
     install: install
   }
+  if (targetFile) result['export'] = targetFile
+
+  return result
 }

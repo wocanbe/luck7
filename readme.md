@@ -1,10 +1,22 @@
 # luck7
 
-一个框架加载的loader,通过读取配置文件(``.luck7rc.js``)的配置进行加载
+一个自动生成代码的框架，可以通过命令行使用，也可以通过webpack来加载
+
+## 配置文件
+
+默认为``.luck7rc.js``,通过命令行使用的时候可以通过``-f``指定配置文件
 
 ## 配置loader
 
- - 使用方法1: 通过框架添加loader
+ - 使用方法1: 使用命令行来生成文件
+
+  ```bash
+  luck7 [targetFile] [-f <configFile>]
+  ```
+  configFile: 配置文件，默认`./.luck7rc.js`
+  targetFile: 要生成的文件，生成的代码将保存到该文件
+
+ - 使用方法2: 通过框架添加loader
 
 ```javascript
 var luck7 = require('luck7')

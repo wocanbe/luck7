@@ -53,9 +53,14 @@ module.exports = function (loader, options) {
   install += loadCmpts(cmps, config.cmpts, config.ocmpts)
   install += '}\nconst l7Element={install:l7EleInstall}'
 
-  return {
+  const result = {
     libs: [styleCode],
     config,
     install
   }
+
+  const targetFile = options.target
+  if (targetFile) result['export'] = targetFile
+
+  return result
 }

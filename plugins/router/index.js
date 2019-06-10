@@ -47,13 +47,17 @@ function creatRootRouter (loader, options) {
   routerConfig[childrenName] = creatRouters(filePath[1], files, options.middleware)
 
   const common = template(options.rootPath || '/', options.middleware)
-  // 编译路由
-  return Promise.resolve({
+
+  const result = {
     libs,
     config: routerConfig,
     common,
     // eslint-disable-next-line
     install: 'const l7Router = ${config}'
-  })
+  }
+  const targetFile = options.target
+  if (targetFile) result['export'] = targetFile
+
+  return Promise.resolve(result)
 }
 module.exports = creatRootRouter

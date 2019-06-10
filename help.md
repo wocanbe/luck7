@@ -13,7 +13,7 @@
 
 ## 插件规则示例
 
-插件导出对象可以支持``libs``,``common``,``define``,``config``,``install``5个配置描述
+插件导出对象可以支持``libs``,``common``,``define``,``config``,``install``, ``export``6个配置描述
 
  - libs
 
@@ -29,6 +29,15 @@
  - defines
 
   来自插件的一般代码，原封不动的输出，重要性较public低，在``config``加载后，``install``加载前加载
+
+ - install
+
+  用以对config进行处理，产生对应插件的代码。如``element``插件，对应的代码为``l7Element``对象
+ 
+ - export
+
+  export会把结果写入``export``指定的文件中
+
  - config
 
   插件配置，对象类型。
