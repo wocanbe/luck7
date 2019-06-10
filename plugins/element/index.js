@@ -51,7 +51,7 @@ module.exports = function (loader, options) {
   install += '    Vue.component(cmp.name, cmp)\n'
   install += '  })\n'
   install += loadCmpts(cmps, config.cmpts, config.ocmpts)
-  install += '}\nconst l7Element={install:l7EleInstall}'
+  install += '}\nconst l7Element = {install: l7EleInstall}'
 
   const result = {
     libs: [styleCode],

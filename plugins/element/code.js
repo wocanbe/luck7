@@ -34,9 +34,9 @@ function loadCmpts (cmps, cmpts, ocmpts) {
       if (globalInfo) {
         for (const g in globalInfo) {
           if (globalInfo[g] === 'default') {
-            install += `  Vue.prototype.$${g}=l7ElCfg.ocmpts[${cmpOrder}]\n`
+            install += `  Vue.prototype.$${g} = l7ElCfg.ocmpts[${cmpOrder}]\n`
           } else {
-            install += `  Vue.prototype.$${g}=l7ElCfg.ocmpts[${cmpOrder}].${globalInfo[g]}\n`
+            install += `  Vue.prototype.$${g} = l7ElCfg.ocmpts[${cmpOrder}].${globalInfo[g]}\n`
           }
         }
       }

@@ -65,8 +65,7 @@ const components = [
   'main',
   'footer',
   'timeline',
-  'timelineItem',
-  'collapseTransition'
+  'timelineItem'
 ]
 // components.sort()
 const globalComponents = [
