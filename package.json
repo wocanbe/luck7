@@ -4,6 +4,9 @@
   "author": "584069777@qq.com",
   "description": "vue",
   "main": "index.js",
+  "bin": {
+    "luck7": "bin/luck7"
+  },
   "dependencies": {
     "chalk": "^2.4.2",
     "hash-sum": "^1.0.2",
