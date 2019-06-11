@@ -50,13 +50,13 @@ function creatRootRouter (loader, options) {
 
   const result = {
     libs,
-    config: routerConfig,
     common,
+    config: routerConfig,
     // eslint-disable-next-line
-    install: 'const l7Router = ${config}'
+    install: 'const l7VueRouter = ${config}'
   }
   const targetFile = options.target
-  if (targetFile) result['export'] = targetFile
+  if (targetFile) result['target'] = targetFile
 
   return Promise.resolve(result)
 }

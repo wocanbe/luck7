@@ -75,7 +75,7 @@ module.exports = function (loader, options) {
     install: install
   }
   const targetFile = options.target
-  if (targetFile) result['export'] = targetFile
+  if (targetFile) result['target'] = targetFile
 
   return result
 }

@@ -156,7 +156,7 @@ function compile (options) {
     const install = options.installs[i]
     const config = options.configs[i]
     // eslint-disable-next-line
-    installStr += install.replace('${config}', compileConfig(config)) + '\n'
+    if (install) installStr += install.replace('${config}', compileConfig(config)) + '\n'
   }
 
   let backStr = '// libs\n'

@@ -60,7 +60,7 @@ module.exports = function (loader, options) {
   }
 
   const targetFile = options.target
-  if (targetFile) result['export'] = targetFile
+  if (targetFile) result['target'] = targetFile
 
   return result
 }

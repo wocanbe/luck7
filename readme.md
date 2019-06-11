@@ -24,7 +24,7 @@ var webpackConfig = require('./webpack.conf')
 module.exports = luck7(webpackConfig)
 ```
 
- - 使用方法2: 手工配置loader
+ - 使用方法3: 手工配置loader
 
 在webpack的loader添加如下代码
 

@@ -13,7 +13,7 @@
 
 ## 插件规则示例
 
-插件导出对象可以支持``libs``,``common``,``define``,``config``,``install``, ``export``6个配置描述
+插件导出对象可以支持``libs``,``common``,``define``,``config``,``install``, ``target``6个配置描述
 
  - libs
 
@@ -25,18 +25,13 @@
 
   在``config``加载前载入，可以处理``config``中依赖的库和方法。不太重要的内容不要放在这
 
-
  - defines
 
   来自插件的一般代码，原封不动的输出，重要性较public低，在``config``加载后，``install``加载前加载
 
- - install
+ - target
 
-  用以对config进行处理，产生对应插件的代码。如``element``插件，对应的代码为``l7Element``对象
- 
- - export
-
-  export会把结果写入``export``指定的文件中
+  可选，如果存在会把该插件的代码保存到``target``指定的文件，``target``的值可以是绝对路径或者相对路径，不支持``webpackConfig.resolve.alias``中的配置
 
  - config
 
@@ -52,11 +47,17 @@
 
    ``['val1|var', 'val2']``，结果``[val1, 'val2']``
 
+   - link: 文件依赖，通过require方式引入
+
+   ``key1|link: 'val1'``: 结果``const _2d2abe26 = require('val1')``,``key1: _2d2abe26``
+
+   ``['val1|link']``: 结果``const _2d2abe26 = require('val1')``,``[_2d2abe26]``
+
    - require: 文件依赖，通过require方式引入
 
    ``key1|require: 'val1'``: 结果````key1: require('val1')``
 
-   ``['value1|require']``: 结果``[require('val1')]``
+   ``['val1|require']``: 结果``[require('val1')]``
 
    - filelink: 文件依赖，通过import方式引入
    
@@ -92,21 +93,18 @@
 
    ``key1|filelink!fun1|fun: 'val1'``: 结果``import _2d2abe26 from 'val1'``,``key1: fun1(_2d2abe26)``
 
-// files from plugins config
-要引入的文件，来自plugins的config中的require/filelink/asynclink
-
    - installs: 要执行的代码
 
    会自动加入处理后的config(替换``${config}``关键词)
 
-   其他: 框架内部自动生成代码
+   - 其他: 框架内部自动生成代码
 
-   对应代码应在install中定义
-   
-   根据插件路径自动转化为驼峰写法，插件导出内容(如l7Ui变量)需在defines或installs中定义
+   导出各个插件定义的对象，各插件的导出对象应在插件中定义好，可以在defines或installs中定义，一般在installs中定义，
+   导出对象的名字为插件路径对应的驼峰写法，如``element``插件，要生成``l7Element``对象
 
   ``export {l7Router, l7Element}``
 
 
 注意
-1、在Object类型中，fun中的funName与asynclink的chunkName，它们的书写位置不一样，一个写在value中，一个写在key中
+1、为了规范代码以及防止eslint报错，link、filelink、asynclink引入了防重复引入机制，对同一个路径，三种引入方式只能有一个生效(最早写的生效)。
+2、在Object类型中，fun中的funName与asynclink的chunkName，它们的书写位置不一样，一个写在value中，一个写在key中

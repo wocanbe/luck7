@@ -1,8 +1,9 @@
 'use strict'
 const fs = require('fs')
 const path = require('path')
-const compile = require('./compile')
 const {hyphen2camel, camel2hyphen} = require('../utils')
+const log = require('../utils/log')
+const compile = require('./compile')
 
 function addPlugin (loader, plugin) {
   let pluginPath = `../plugins/${plugin[0]}`
@@ -44,8 +45,7 @@ function generateFramework (loader, options) {
   for (let pluginName in plugins) {
     const plugin = plugins[pluginName]
     if (!plugin) continue
-    const exportName = hyphen2camel('l7-' + pluginName)
-    exportNames.push(exportName)
+    exportNames.push(pluginName)
     tasks.push(addPlugin(loader, [camel2hyphen(pluginName), plugin]))
   }
   return Promise.all(tasks).then(pluginsCode => {
@@ -56,9 +56,11 @@ function generateFramework (loader, options) {
     const configs = [] // 配置
     for (var o in pluginsCode) {
       const p = pluginsCode[o]
-      if (p.export) { // 单独处理
-        let installCode
-        if (p.install) installCode = p.install + '\nexport default ' + exportNames[o]
+      const pluginsName = hyphen2camel('l7-' + exportNames[o])
+      let installCode = ''
+      if (p.install) installCode = p.install
+      if (p.target) { // 单独处理
+        installCode += '\nexport default ' + pluginsName
         const exportCode = compile({
           libs: p.libs,
           common: [p.common],
@@ -66,13 +68,13 @@ function generateFramework (loader, options) {
           installs: [installCode],
           configs: [p.config]
         })
-        fs.writeFileSync(p.export, exportCode, {encoding: 'utf-8'})
+        fs.writeFileSync(p.target, exportCode, {encoding: 'utf-8'})
       } else {
         if (p.libs) addLibs(libsCodes, p.libs)
         if (p.common) commonCodes.push(p.common)
         if (p.define) defineCodes.push(p.define)
-        installCodes.push(p.install)
-        exportPlugins.push(exportNames[o])
+        installCodes.push(installCode)
+        exportPlugins.push(pluginsName)
         if (p.config) configs.push(p.config)
       } 
     }

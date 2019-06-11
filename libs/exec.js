@@ -31,7 +31,9 @@ try {
   return
 }
 const loader = {
-  addContextDependency () {}
+  resourcePath: path.resolve(params.target), // 兼容webpack写法，也可以用来计算相对路径
+  addContextDependency () {}, // 没用，为了兼容webpack写法，调用时不报错
+  context: '' // 没用，为了兼容webpack写法，调用时不报错
 }
 generator(loader, config)
   .then((frameCode) => {
