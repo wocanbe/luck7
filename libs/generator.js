@@ -49,40 +49,45 @@ function generateFramework (loader, options) {
     tasks.push(addPlugin(loader, [camel2hyphen(pluginName), plugin]))
   }
   return Promise.all(tasks).then(pluginsCode => {
-    const libsCodes = [] // 需要引入的类库
-    const commonCodes = [] // 需要引入的公共方法
-    const defineCodes = [] // 代码
-    const installCodes = [] // 安装方法
+    const beforeLibs = [] // 需要引入的类库
+    const afterLibs = [] // 需要引入的内部库以及不太重要的引入
+    const defineCodes = [] // 需要引入的公共方法
+    const pluginInstalls = [] // 安装方法
     const configs = [] // 配置
     for (var o in pluginsCode) {
       const p = pluginsCode[o]
       const pluginsName = hyphen2camel('l7-' + exportNames[o])
-      let installCode = ''
-      if (p.install) installCode = p.install
+      let pluginLibs = []
+      let pluginConfig = {}
+      let pluginInstall = ''
+      if (p.libs) pluginLibs = p.libs
+      if (p.config) pluginConfig = p.config
+      if (p.install) pluginInstall = p.install
       if (p.target) { // 单独处理
-        installCode += '\nexport default ' + pluginsName
+        pluginInstall += '\nexport default ' + pluginsName
+        const pluginDefine = []
+        if (p.define) pluginDefine.push(p.define)
+        if (p.utils) pluginLibs = pluginLibs.concat(p.utils)
         const exportCode = compile({
-          libs: p.libs,
-          common: [p.common],
-          defines: [p.define],
-          installs: [installCode],
-          configs: [p.config]
+          libs: pluginLibs,
+          defines: pluginDefine,
+          installs: [pluginInstall],
+          configs: [pluginConfig]
         })
         fs.writeFileSync(p.target, exportCode, {encoding: 'utf-8'})
       } else {
-        if (p.libs) addLibs(libsCodes, p.libs)
-        if (p.common) commonCodes.push(p.common)
+        addLibs(beforeLibs, pluginLibs)
         if (p.define) defineCodes.push(p.define)
-        installCodes.push(installCode)
+        if (p.utils) addLibs(afterLibs, p.utils)
+        pluginInstalls.push(pluginInstall)
         exportPlugins.push(pluginsName)
-        if (p.config) configs.push(p.config)
+        configs.push(pluginConfig)
       } 
     }
     const backres = compile({
-      libs: libsCodes,
-      common: commonCodes,
+      libs: beforeLibs.concat(afterLibs),
       defines: defineCodes,
-      installs: installCodes,
+      installs: pluginInstalls,
       configs: configs
     }) + '\n' + 'export {' + exportPlugins.join(', ') + '}'
     return '\'use strict\'\n' + backres

@@ -13,9 +13,6 @@ function l7RouteFilter (route) {
 }`
 module.exports = function (rootPath, middleware) {
   let str = str1 + `\nconst l7RouteRoot = '${rootPath}'`
-  if (middleware) {
-    str += `\nimport routeFilter from '${middleware}'`
-    str += str2
-  }
+  if (middleware) str += str2
   return str
 }

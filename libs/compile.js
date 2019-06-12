@@ -161,8 +161,6 @@ function compile (options) {
 
   let backStr = '// libs\n'
   backStr += options.libs.join('\n')
-  backStr += '\n// commons\n'
-  backStr += options.common.join('\n')
   backStr += '\n// files\n'
   backStr += dependents.join('\n')
   backStr += '\n// defines\n'

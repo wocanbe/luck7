@@ -12,6 +12,7 @@ function creatRootRouter (loader, options) {
     ignore = ignore.concat(options.ignore)
   }
   const libs = []
+  const utils = []
   // 读取目录
   const files = readPath(loader, filePath[0], {ignore, relatePath: ''})
   if (files === false) {
@@ -26,6 +27,7 @@ function creatRootRouter (loader, options) {
     libs.push('import extend from \'lodash/extend\'')
     libs.push('import isFunction from \'lodash/isFunction\'')
     libs.push('import isObject from \'lodash/isObject\'')
+    utils.push(`import routeFilter from '${options.middleware}'`)
   }
 
   let routerConfig = {
@@ -46,11 +48,12 @@ function creatRootRouter (loader, options) {
   // 生成路由元数据
   routerConfig[childrenName] = creatRouters(filePath[1], files, options.middleware)
 
-  const common = template(options.rootPath || '/', options.middleware)
+  const define = template(options.rootPath || '/', options.middleware)
 
   const result = {
     libs,
-    common,
+    utils,
+    define,
     config: routerConfig,
     // eslint-disable-next-line
     install: 'const l7VueRouter = ${config}'

@@ -6,16 +6,15 @@ const ajax = function (apiName, params) {
 const l7AjaxIinstall = function (Vue) {
   Vue.prototype.$ajax = ajax
 }`
-const install = `
+const install = `${ajaxCommon}
 export {ajax}
 const l7Ajax = {
   install: l7AjaxIinstall
 }`
 module.exports = function (loader, options) {
-  const common = `import l7AjaxConfig from '${options.config}'${ajaxCommon}`
   const result = {
     libs: ['import Luck7Ajax from \'luck7-ajax\''],
-    common,
+    utils: [`import l7AjaxConfig from '${options.config}'`],
     install
   }
 
