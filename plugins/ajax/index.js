@@ -12,14 +12,9 @@ const l7Ajax = {
   install: l7AjaxIinstall
 }`
 module.exports = function (loader, options) {
-  const result = {
+  return {
     libs: ['import Luck7Ajax from \'luck7-ajax\''],
     utils: [`import l7AjaxConfig from '${options.config}'`],
     install
   }
-
-  const targetFile = options.target
-  if (targetFile) result['target'] = targetFile
-
-  return result
 }

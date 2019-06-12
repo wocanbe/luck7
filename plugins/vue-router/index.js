@@ -50,7 +50,7 @@ function creatRootRouter (loader, options) {
 
   const define = template(options.rootPath || '/', options.middleware)
 
-  const result = {
+  return {
     libs,
     utils,
     define,
@@ -58,9 +58,5 @@ function creatRootRouter (loader, options) {
     // eslint-disable-next-line
     install: 'const l7VueRouter = ${config}'
   }
-  const targetFile = options.target
-  if (targetFile) result['target'] = targetFile
-
-  return Promise.resolve(result)
 }
 module.exports = creatRootRouter

@@ -68,14 +68,10 @@ module.exports = function (loader, options) {
   install += '}\n'
   install += 'const l7Ui = {install: l7UiInstall}'
 
-  const result = {
+  return {
     libs: libs,
     config: componentsConfig,
     // eslint-disable-next-line
     install: install
   }
-  const targetFile = options.target
-  if (targetFile) result['target'] = targetFile
-
-  return result
 }

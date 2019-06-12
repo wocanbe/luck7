@@ -40,12 +40,15 @@ function generateFramework (loader, options) {
   const plugins = options.plugins || {}
   const exportNames = []
   const exportPlugins = []
+  const exportTarget = []
 
   const tasks = [] // 插件安装任务列表
   for (let pluginName in plugins) {
     const plugin = plugins[pluginName]
     if (!plugin) continue
     exportNames.push(pluginName)
+    if (plugin.target) exportTarget.push(plugin.target)
+    else exportTarget.push(undefined)
     tasks.push(addPlugin(loader, [camel2hyphen(pluginName), plugin]))
   }
   return Promise.all(tasks).then(pluginsCode => {
@@ -63,7 +66,7 @@ function generateFramework (loader, options) {
       if (p.libs) pluginLibs = p.libs
       if (p.config) pluginConfig = p.config
       if (p.install) pluginInstall = p.install
-      if (p.target) { // 单独处理
+      if (exportTarget[o]) { // 指定了target，单独处理
         pluginInstall += '\nexport default ' + pluginsName
         const pluginDefine = []
         if (p.define) pluginDefine.push(p.define)
@@ -74,7 +77,7 @@ function generateFramework (loader, options) {
           installs: [pluginInstall],
           configs: [pluginConfig]
         })
-        fs.writeFileSync(p.target, exportCode, {encoding: 'utf-8'})
+        fs.writeFileSync(exportTarget[o], exportCode, {encoding: 'utf-8'})
       } else {
         addLibs(beforeLibs, pluginLibs)
         if (p.define) defineCodes.push(p.define)

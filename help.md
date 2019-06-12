@@ -13,13 +13,7 @@
 
 ## 插件规则
 
-插件导出对象可以支持``target``, ``libs``, ``utils``, ``define``,``config``,``install``6个配置
-
-## target
-
-  可选，如果存在会把该插件的代码保存到``target``指定的文件，``target``的值可以是绝对路径或者相对路径，不支持``webpackConfig.resolve.alias``中的配置
-
-  跟其他4个配置不同，target不处理代码，只是将生成的代码保存到文件
+插件导出对象可以支持``libs``, ``utils``, ``define``,``config``,``install``5个配置
 
 ## libs和utils
 

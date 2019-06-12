@@ -7,7 +7,7 @@ const generator = require('./generator')
 
 const params = {
   debug: false,
-  file: './.luck7rc.js',
+  config: './.luck7rc.js',
   target: ''
 }
 program.version('0.1.3')
@@ -15,10 +15,10 @@ program.version('0.1.3')
   .action(function (target) {
     params.target = target
   })
-  .option('-f, --file <path>', '配置文件')
+  .option('-c, --config <path>', '配置文件')
   .parse(process.argv)
 
-if (program.file) params.file = program.file
+if (program.config) params.config = program.config
 
 
 const configPath = path.resolve(params.file)
