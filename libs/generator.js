@@ -2,7 +2,6 @@
 const fs = require('fs')
 const path = require('path')
 const {hyphen2camel, camel2hyphen} = require('../utils')
-const log = require('../utils/log')
 const compile = require('./compile')
 
 function addPlugin (loader, plugin) {

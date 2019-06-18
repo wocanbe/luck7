@@ -9,7 +9,7 @@ module.exports = function (content, map) {
     // 皮肤样式
     if (opts.theme) content += `@import '${opts.theme}';\n`
     // element公共样式
-    content += '$--font-path: \'~element-ui/lib/theme-chalk/fonts\'!default;\n'
+    content += '$--font-path: \'~element-theme-chalk/src/fonts\'!default;\n'
     content += '@import \'~element-theme-chalk/src/base.scss\';\n'
     // 组件样式
     opts.components.forEach((item) => {

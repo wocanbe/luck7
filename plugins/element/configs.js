@@ -65,8 +65,14 @@ const components = [
   'main',
   'footer',
   'timeline',
-  'timelineItem'
+  'timelineItem',
+  'infiniteScroll',
+  'collapseTransition'
 ]
+const specialComponents = {
+  infiniteScroll: ['infiniteScroll', 'infiniteScroll'],
+  collapseTransition: ['transitions/collapse-transition', '']
+}
 // components.sort()
 const globalComponents = [
   // 以下四个组件不需要注册为Ui组件
@@ -146,6 +152,7 @@ const lang = [
 
 module.exports = {
   components,
+  specialComponents,
   globalComponents,
   directive,
   global,

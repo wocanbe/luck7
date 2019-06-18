@@ -46,7 +46,7 @@ function creatRootRouter (loader, options) {
   }
 
   // 生成路由元数据
-  routerConfig[childrenName] = creatRouters(filePath[1], files, options.middleware)
+  routerConfig[childrenName] = creatRouters(filePath[1], files, options.middleware, options.hasName)
 
   const define = template(options.rootPath || '/', options.middleware)
 

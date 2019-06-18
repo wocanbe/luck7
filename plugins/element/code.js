@@ -1,10 +1,15 @@
-const {components, globalComponents, directive, global} = require('./configs')
+const {components, specialComponents, globalComponents, directive, global} = require('./configs')
 const {camel2hyphen} = require('luck7/utils')
 
 function loadStyles (cmpts, theme, supportSkin) {
   const styles = []
   for (let i = 0; i < cmpts.length; i++) {
-    if (components.includes(cmpts[i]) || globalComponents.includes(cmpts[i])) styles.push(camel2hyphen(cmpts[i]))
+    const cmpName = cmpts[i]
+    if (components.includes(cmpName) || globalComponents.includes(cmpName)) {
+      if (specialComponents[cmpName]) {
+        if (specialComponents[cmpName][1]) styles.push(specialComponents[cmpName][1])
+      } else styles.push(camel2hyphen(cmpName))
+    }
   }
   const styleConfig = {
     components: styles,
@@ -22,7 +27,8 @@ function loadCmpts (cmps, cmpts, ocmpts) {
   for (const cmp of cmps) {
     if (components.includes(cmp)) {
       const cmpDir = camel2hyphen(cmp)
-      cmpts.push(`element-ui/lib/${cmpDir}.js|filelink`)
+      if (specialComponents[cmp]) cmpts.push(`element-ui/lib/${specialComponents[cmp][0]}.js|filelink`)
+      else cmpts.push(`element-ui/lib/${cmpDir}.js|filelink`)
     } else if (globalComponents.includes(cmp)) { // element的全局组件不在ui组件列表中，不需要注册为vue组件，所以要分开处理
       const cmpDir = camel2hyphen(cmp)
       const dictInfo = directive[cmp]

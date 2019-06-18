@@ -21,7 +21,7 @@ program.version('0.1.3')
 if (program.config) params.config = program.config
 
 
-const configPath = path.resolve(params.file)
+const configPath = path.resolve(params.config)
 delete require.cache[configPath]
 let config
 try {
@@ -31,7 +31,7 @@ try {
   return
 }
 const loader = {
-  resourcePath: path.resolve(params.target), // 兼容webpack写法，也可以用来计算相对路径
+  resourcePath: params.target ? path.resolve(params.target) : __dirname, // 兼容webpack写法，也可以用来计算相对路径
   addContextDependency () {}, // 没用，为了兼容webpack写法，调用时不报错
   context: '' // 没用，为了兼容webpack写法，调用时不报错
 }

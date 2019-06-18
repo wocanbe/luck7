@@ -1,7 +1,7 @@
 // const loaderUtils = require('loader-utils')
 const hash = require('hash-sum')
 
-function getFileRoute (dirPath, file, options) {
+function getFileRoute (dirPath, file, options, hasName) {
   let routePath = file.replace('$', '')
   // const component = loaderUtils.stringifyRequest(dirPath + options.relatePath + '/' + file + '.vue')
   let relatePath = options.relatePath ? options.relatePath + '/' : ''
@@ -25,11 +25,13 @@ function getFileRoute (dirPath, file, options) {
     fullpath = relatePath + routePath
   }
   let backRes = []
-  routeName = fullpath.replace(/\//g, '-').replace(/\:/g, '')
-  if (routeName.slice(-1) === '-') routeName = routeName.slice(0, -1)
   const backRoute = {
-    name: routeName,
     path: routePath
+  }
+  if (hasName) {
+    routeName = fullpath.replace(/\//g, '-').replace(/\:/g, '')
+    if (routeName.slice(-1) === '-') routeName = routeName.slice(0, -1)
+    backRoute['name'] = routeName
   }
   if (chunkName) {
     // if (chunkName === true) backRoute['component|asynclink'] = component // 不chunkName，只进行异步引入
@@ -41,7 +43,7 @@ function getFileRoute (dirPath, file, options) {
   backRes.push(fullpath)
   return backRes
 }
-function getRouteConfig (dirPath, options, middleware) {
+function getRouteConfig (dirPath, options, middleware, hasName) {
   const {files, dirs, indexFile, hasFull} = options
   const prefixPath = options.prefixPath ? options.prefixPath + '/' : ''
   const relatePath = options.relatePath ? options.relatePath + '/' : ''
@@ -50,7 +52,7 @@ function getRouteConfig (dirPath, options, middleware) {
   if (middleware) childrenName += '!l7RouteFilter[]|fun'
 
   if (indexFile) {
-    const indexRoute = getFileRoute(dirPath, indexFile, Object.assign(options, {prefixPath}))
+    const indexRoute = getFileRoute(dirPath, indexFile, Object.assign(options, {prefixPath}), hasName)
     if (middleware) {
       // indexRoute[1] = '' // 首页不进行路由权限检查
       routes.push(indexRoute)
@@ -59,7 +61,7 @@ function getRouteConfig (dirPath, options, middleware) {
   for (var file of files) {
     let routePath = file.replace('$', '')
     let asyncPath = '$' + routePath
-    const cmpRoutes = getFileRoute(dirPath, file, Object.assign(options, {prefixPath}))
+    const cmpRoutes = getFileRoute(dirPath, file, Object.assign(options, {prefixPath}), hasName)
 
     let chunkName = options.chunkName
     let parentAsync = false
@@ -68,12 +70,12 @@ function getRouteConfig (dirPath, options, middleware) {
       parentAsync = true
     }
     if (dirs[routePath]) { // 存在子路由
-      const childRoutes = getRouteConfig(dirPath, Object.assign(dirs[routePath], {prefixPath: '', chunkName}), middleware)
+      const childRoutes = getRouteConfig(dirPath, Object.assign(dirs[routePath], {prefixPath: '', chunkName}), middleware, hasName)
       if (dirs[routePath].indexFile) delete cmpRoutes[0].name // 防止路由报错，删掉有子路由的父路由name
       cmpRoutes[0][childrenName] = childRoutes
     } else if (dirs[asyncPath]) { // 存在异步子路由
       if (!parentAsync) chunkName = hash(relatePath + routePath) // 如果父路由不是异步的，异步子路由再次创建chunkName
-      const childRoutes = getRouteConfig(dirPath, Object.assign(dirs[asyncPath], {prefixPath: '', chunkName}), middleware)
+      const childRoutes = getRouteConfig(dirPath, Object.assign(dirs[asyncPath], {prefixPath: '', chunkName}), middleware, hasName)
       if (dirs[asyncPath].indexFile) delete cmpRoutes[0].name
       cmpRoutes[0][childrenName] = childRoutes
     }
@@ -99,15 +101,15 @@ function getRouteConfig (dirPath, options, middleware) {
     const dirPrefix = prefixPath + routePath
     if (path.slice(0, 1) === '$') {
       chunkName = hash(relatePath + routePath)
-      dirRouter[childrenName] = getRouteConfig(dirPath, Object.assign(dirs[path], {prefixPath: dirPrefix, chunkName}), middleware)
+      dirRouter[childrenName] = getRouteConfig(dirPath, Object.assign(dirs[path], {prefixPath: dirPrefix, chunkName}), middleware, hasName)
     } else {
-      dirRouter[childrenName] = getRouteConfig(dirPath, Object.assign(dirs[path], {prefixPath: dirPrefix, chunkName}), middleware)
+      dirRouter[childrenName] = getRouteConfig(dirPath, Object.assign(dirs[path], {prefixPath: dirPrefix, chunkName}), middleware, hasName)
     }
     if (middleware) routes.push([dirRouter, fullpath])
     else routes.push(dirRouter)
   }
   if (hasFull) {
-    const fullRoute = getFileRoute(dirPath, '_', Object.assign(options, {prefixPath}))
+    const fullRoute = getFileRoute(dirPath, '_', Object.assign(options, {prefixPath}), hasName)
     fullRoute[0].name = fullRoute[0].name.replace('*', 'full')
     if (middleware) routes.push(fullRoute)
     else routes.push(fullRoute[0])

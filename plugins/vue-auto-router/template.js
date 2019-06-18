@@ -12,7 +12,7 @@ function l7RouteFilter (route) {
   return route[0]
 }`
 module.exports = function (rootPath, middleware) {
-  let str = str1 + `\nconst l7RouteRoot = '${rootPath}'`
-  if (middleware) str += str2
+  let str = str1
+  if (middleware) str += `\nconst l7RouteRoot = '${rootPath}'` + str2
   return str
 }
