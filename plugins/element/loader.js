@@ -57,12 +57,11 @@ module.exports = function (content, map) {
     if (opts.theme) content += `@import '${opts.theme}';\n`
     // element公共样式
     content += '$--font-path: \'~element-theme-chalk/src/fonts\'!default;\n'
-    content += '@import \'~element-theme-chalk/src/base.scss\';\n'
+    content += '@import \'~element-theme-chalk/src/common/transition.scss\';\n'
+    content += iconStyle
     // 组件样式
     opts.components.forEach((item) => {
-      if (item === 'icon') {
-        content += iconStyle
-      } else {
+      if (item !== 'icon') {
         content += `${pathHandler.themePath(item)}\n`
       }
     })
