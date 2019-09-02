@@ -67,10 +67,19 @@ const components = [
   'timeline',
   'timelineItem',
   'infiniteScroll',
-  'collapseTransition'
+  'link',
+  'divider',
+  'image',
+  'calendar',
+  'backtop',
+  'pageHeader',
+  'cascaderPanel',
+  'avatar',
+  'drawer'
 ]
+
 const specialComponents = {
-  infiniteScroll: ['infiniteScroll', 'infiniteScroll'],
+  // infiniteScroll: ['infiniteScroll', 'infiniteScroll'],
   collapseTransition: ['transitions/collapse-transition', '']
 }
 // components.sort()
@@ -147,7 +156,9 @@ const lang = [
   'sr', // 塞尔维亚语
   'eu', // 巴斯克语
   'kg', // 吉尔吉斯语
-  'hy' // 亚美尼亚语
+  'hy', // 亚美尼亚语
+  'hr', // 克罗地亚
+  'eo' // 世界语
 ]
 
 module.exports = {
